@@ -1,0 +1,8 @@
+spring.application.name=prescription-manager
+
+spring.datasource.url=jdbc:postgresql://localhost:5432/prescription_manager
+spring.datasource.username=USERNAME
+spring.datasource.password=PASSWORD
+
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.show-sql=true
