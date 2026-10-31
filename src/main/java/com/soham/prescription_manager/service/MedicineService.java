@@ -23,9 +23,9 @@ public class MedicineService
         return medicineRepository.findAll();
     }
 
-    public Optional<Medicine> getMedicineById(long id)
+    public Medicine getMedicineById(long id)
     {
-        return medicineRepository.findById(id);
+        return medicineRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Medicine not found with id : " + id));
     }
 
     public Medicine addMedicine(Medicine medicine)

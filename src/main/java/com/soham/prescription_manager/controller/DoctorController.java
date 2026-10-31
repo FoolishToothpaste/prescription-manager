@@ -29,12 +29,32 @@ public class DoctorController
     @GetMapping("/{did}")
     public Doctor getDoctorById(@PathVariable Long did)
     {
-        return doctorService.getDoctorById(did).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Doctor not found with id : " + did));
+        return doctorService.getDoctorById(did);
     }
 
     @PostMapping
     public Doctor addDoctor(@Valid @RequestBody Doctor doctor)
     {
         return doctorService.addDoctor(doctor);
+    }
+
+    @DeleteMapping("/{did}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteDoctorById(@PathVariable Long did)
+    {
+        doctorService.deleteDoctorById(did);
+    }
+
+    @DeleteMapping
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteAllDoctors()
+    {
+        doctorService.deleteAllDoctors();
+    }
+
+    @PutMapping("/{did}")
+    public Doctor updateDoctor(@PathVariable long did, @Valid @RequestBody Doctor doctor)
+    {
+        return doctorService.updateDoctor(did, doctor);
     }
 }

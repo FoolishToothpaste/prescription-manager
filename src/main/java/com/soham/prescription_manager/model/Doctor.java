@@ -18,7 +18,7 @@ public class Doctor
 
     @NotBlank(message = "Doctor's name cannot be blank!")
     @Size(max = 50, message = "Doctor's name too long!")
-    private String name;
+    private String dname;
 
     @NotBlank(message = "Doctor's department name cannot be blank!")
     @Size(max = 20, message = "Doctor's department name too long!")
@@ -36,9 +36,9 @@ public class Doctor
     public Doctor()
     {}
 
-    public Doctor(String name, String department, String dphone_number, String demail)
+    public Doctor(String dname, String department, String dphone_number, String demail)
     {
-        this.name = name;
+        this.dname = dname;
         this.department = department;
         this.dphone_number = dphone_number;
         this.demail = demail;
@@ -47,6 +47,11 @@ public class Doctor
     public long getDoctorId()
     {
         return did;
+    }
+
+    public String getDoctorName()
+    {
+        return dname;
     }
 
     public String getDoctorDepartment()
@@ -62,5 +67,25 @@ public class Doctor
     public String getDoctorEmail()
     {
         return demail;
+    }
+
+    public void setDoctorName(String dname)
+    {
+        this.dname = dname;
+    }
+
+    public void setDoctorDepartment(String department)
+    {
+        this.department = department;
+    }
+
+    public void setDoctorPhoneNumber(String dphone_number)
+    {
+        this.dphone_number = dphone_number;
+    }
+
+    public void setDoctorEmail(String demail)
+    {
+        this.demail = demail;
     }
 }

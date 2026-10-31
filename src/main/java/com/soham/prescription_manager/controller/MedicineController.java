@@ -29,7 +29,7 @@ public class MedicineController
     @GetMapping("/{id}")
     public Medicine getMedicineById(@PathVariable Long id)
     {
-        return medicineService.getMedicineById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Medicine not found with id : " + id));
+        return medicineService.getMedicineById(id);
     }
 
     @PostMapping
