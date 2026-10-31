@@ -3,9 +3,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
 
 @Entity
 public class Patient
@@ -14,17 +11,8 @@ public class Patient
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long pid;
 
-    @NotBlank(message = "Patient name cannot be empty!")
-    @Size(max = 50, message = "Patient name too long!")
     private String pname;
-
-    @NotBlank(message = "Patient phone number cannot be empty!")
-    @Size(max = 10, message = "Patient phone number too long!")
     private String pphone_number;
-
-    @NotBlank(message = "Patient email cannot be empty!")
-    @Size(max = 60, message = "Patient email too long!")
-    @Email(message = "Please enter a valid email")
     private String pemail;
 
     public Patient(){}
@@ -54,6 +42,11 @@ public class Patient
     public String getPatientEmail()
     {
         return pemail;
+    }
+
+    public void setPatientId(long pid)
+    {
+        this.pid = pid;
     }
 
     public void setPatientName(String pname)

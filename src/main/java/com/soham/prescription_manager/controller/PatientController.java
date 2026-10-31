@@ -1,5 +1,8 @@
 package com.soham.prescription_manager.controller;
 
+import com.soham.prescription_manager.dto.patient.PatientCreateRequest;
+import com.soham.prescription_manager.dto.patient.PatientPatchRequest;
+import com.soham.prescription_manager.dto.patient.PatientPutRequest;
 import com.soham.prescription_manager.model.Patient;
 import com.soham.prescription_manager.service.PatientService;
 import jakarta.validation.Valid;
@@ -32,9 +35,9 @@ public class PatientController
     }
 
     @PostMapping
-    public Patient addPatient(@Valid @RequestBody Patient patient)
+    public Patient addPatient(@Valid @RequestBody PatientCreateRequest patientCreateRequest)
     {
-        return patientService.addPatient(patient);
+        return patientService.addPatient(patientCreateRequest);
     }
 
     @DeleteMapping("/{pid}")
@@ -52,8 +55,14 @@ public class PatientController
     }
 
     @PutMapping("/{pid}")
-    public Patient updatePatientById(@PathVariable long pid, @Valid @RequestBody Patient patient)
+    public Patient updatePatientById(@PathVariable long pid, @Valid @RequestBody PatientPutRequest patientPutRequest)
     {
-        return patientService.updatePatientById(pid, patient);
+        return patientService.updatePatientById(pid, patientPutRequest);
+    }
+
+    @PatchMapping("/{pid}")
+    public Patient updatePatientSelectiveField(@PathVariable long pid, @Valid @RequestBody PatientPatchRequest patientPatchRequest)
+    {
+        return patientService.updatePatientSelectiveFields(pid, patientPatchRequest);
     }
 }
