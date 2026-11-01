@@ -1,5 +1,8 @@
 package com.soham.prescription_manager.service;
 
+import com.soham.prescription_manager.dto.doctor.DoctorCreateRequest;
+import com.soham.prescription_manager.dto.doctor.DoctorPatchRequest;
+import com.soham.prescription_manager.dto.doctor.DoctorPutRequest;
 import com.soham.prescription_manager.repository.DoctorRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -29,8 +32,19 @@ public class DoctorService
         return doctorRepository.findById(did).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Doctor not found with id : " + did));
     }
 
-    public Doctor addDoctor(Doctor doctor)
+    public Doctor addDoctor(DoctorCreateRequest doctorCreateRequest)
     {
+        System.out.println(doctorCreateRequest.getDoctorName());
+        System.out.println(doctorCreateRequest.getDoctorDepartment());
+        System.out.println(doctorCreateRequest.getDoctorPhoneNumber());
+        System.out.println(doctorCreateRequest.getDoctorEmail());
+
+        Doctor doctor = new Doctor(
+                doctorCreateRequest.getDoctorName(),
+                doctorCreateRequest.getDoctorDepartment(),
+                doctorCreateRequest.getDoctorPhoneNumber(),
+                doctorCreateRequest.getDoctorEmail()
+        );
         return doctorRepository.save(doctor);
     }
 
@@ -49,15 +63,42 @@ public class DoctorService
         doctorRepository.deleteAll();
     }
 
-    public Doctor updateDoctor(long did, Doctor doctor)
+    public Doctor updateDoctor(long did, DoctorPutRequest doctorPutRequest)
     {
         Doctor existingDoctor = doctorRepository.findById(did).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Doctor not found by id : " + did));
 
-        existingDoctor.setDoctorName(doctor.getDoctorName());
-        existingDoctor.setDoctorDepartment(doctor.getDoctorDepartment());
-        existingDoctor.setDoctorEmail(doctor.getDoctorEmail());
-        existingDoctor.setDoctorPhoneNumber(doctor.getDoctorPhoneNumber());
+        existingDoctor.setDoctorName(doctorPutRequest.getDoctorName());
+        existingDoctor.setDoctorDepartment(doctorPutRequest.getDoctorDepartment());
+        existingDoctor.setDoctorEmail(doctorPutRequest.getDoctorEmail());
+        existingDoctor.setDoctorPhoneNumber(doctorPutRequest.getDoctorPhoneNumber());
 
         return doctorRepository.save(existingDoctor);
+    }
+
+    public Doctor updateDoctorById(long did, DoctorPatchRequest doctorPatchRequest)
+    {
+        Doctor existingDoctor = doctorRepository.findById(did).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Doctor not found with id : " + did));
+
+        if(doctorPatchRequest.getDoctorName() != null)
+        {
+            existingDoctor.setDoctorName(doctorPatchRequest.getDoctorName());
+        }
+
+        if(doctorPatchRequest.getDoctorDepartment() != null)
+        {
+            existingDoctor.setDoctorDepartment(doctorPatchRequest.getDoctorDepartment());
+        }
+
+        if(doctorPatchRequest.getDoctorPhoneNumber() != null)
+        {
+            existingDoctor.setDoctorPhoneNumber(doctorPatchRequest.getDoctorPhoneNumber());
+        }
+
+        if(doctorPatchRequest.getDoctorEmail() != null)
+        {
+            existingDoctor.setDoctorEmail(doctorPatchRequest.getDoctorEmail());
+        }
+
+        return  doctorRepository.save(existingDoctor);
     }
 }

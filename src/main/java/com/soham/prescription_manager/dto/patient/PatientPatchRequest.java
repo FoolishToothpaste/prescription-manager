@@ -16,7 +16,6 @@ public class PatientPatchRequest
     )
     private String pphone_number;
 
-    @Pattern(regexp = ".*\\S.*", message = "Patient email cannot be whitespaces, either have null or a valid email!")
     @Size(max = 60, message = "Patient email too long!")
     @Email(message = "Please enter a valid email")
     private String pemail;

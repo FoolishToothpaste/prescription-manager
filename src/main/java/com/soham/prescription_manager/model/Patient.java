@@ -44,11 +44,6 @@ public class Patient
         return pemail;
     }
 
-    public void setPatientId(long pid)
-    {
-        this.pid = pid;
-    }
-
     public void setPatientName(String pname)
     {
         this.pname = pname;

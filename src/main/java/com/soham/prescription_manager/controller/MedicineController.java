@@ -1,4 +1,7 @@
 package com.soham.prescription_manager.controller;
+import com.soham.prescription_manager.dto.medicine.MedicineCreateRequest;
+import com.soham.prescription_manager.dto.medicine.MedicinePatchRequest;
+import com.soham.prescription_manager.dto.medicine.MedicinePutRequest;
 import com.soham.prescription_manager.model.Medicine;
 import com.soham.prescription_manager.service.MedicineService;
 import org.springframework.http.HttpStatus;
@@ -33,9 +36,9 @@ public class MedicineController
     }
 
     @PostMapping
-    public Medicine postMedicines(@Valid @RequestBody Medicine medicine)
+    public Medicine postMedicines(@Valid @RequestBody MedicineCreateRequest medicineCreateRequest)
     {
-        return medicineService.addMedicine(medicine);
+        return medicineService.addMedicine(medicineCreateRequest);
     }
 
     @DeleteMapping("/{id}")
@@ -53,8 +56,14 @@ public class MedicineController
     }
 
     @PutMapping("/{id}")
-    public Medicine updateMedicine(@PathVariable long id, @Valid @RequestBody Medicine medicine)
+    public Medicine updateMedicine(@PathVariable long id, @Valid @RequestBody MedicinePutRequest medicinePutRequest)
     {
-        return medicineService.updateMedicine(id, medicine);
+        return medicineService.updateMedicine(id, medicinePutRequest);
+    }
+
+    @PatchMapping("/{id}")
+    public Medicine updateMedicineById(@PathVariable long id, @Valid @RequestBody MedicinePatchRequest medicinePatchRequest)
+    {
+        return medicineService.updateMedicineById(id, medicinePatchRequest);
     }
 }
