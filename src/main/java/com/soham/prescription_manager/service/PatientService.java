@@ -3,12 +3,14 @@ package com.soham.prescription_manager.service;
 import com.soham.prescription_manager.dto.patient.PatientCreateRequest;
 import com.soham.prescription_manager.dto.patient.PatientPatchRequest;
 import com.soham.prescription_manager.dto.patient.PatientPutRequest;
+import com.soham.prescription_manager.dto.patient.PatientResponse;
 import com.soham.prescription_manager.model.Patient;
 import com.soham.prescription_manager.repository.PatientRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -21,24 +23,41 @@ public class PatientService
         this.patientRepository = patientRepository;
     }
 
-    public List<Patient> getAllPatients()
+    private PatientResponse patientResponseMapping(Patient patient)
     {
-        return patientRepository.findAll();
+        return new PatientResponse(patient.getPatientId(),
+                patient.getPatientName(),
+                patient.getPatientEmail());
     }
 
-    public Patient getPatientById(long pid)
+    public List<PatientResponse> getAllPatients()
     {
-        return patientRepository.findById(pid).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Patient not found with id : " + pid));
+        List<Patient> patientList = patientRepository.findAll();
+        List<PatientResponse> patientResponseList = new ArrayList<>();
+
+        for (Patient patient : patientList) {
+            patientResponseList.add(patientResponseMapping(patient));
+        }
+
+        return patientResponseList;
     }
 
-    public Patient addPatient(PatientCreateRequest patientCreateRequest)
+    public PatientResponse getPatientById(long pid)
+    {
+        Patient patient = patientRepository.findById(pid).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Patient not found with id + " + pid));
+
+        return patientResponseMapping(patient);
+    }
+
+    public PatientResponse addPatient(PatientCreateRequest patientCreateRequest)
     {
         Patient patient = new Patient(
                 patientCreateRequest.getPatientName(),
                 patientCreateRequest.getPatientPhoneNumber(),
                 patientCreateRequest.getPatientEmail()
         );
-        return patientRepository.save(patient);
+
+        return patientResponseMapping(patientRepository.save(patient));
     }
 
     public void deletePatientById(long pid)
@@ -55,17 +74,17 @@ public class PatientService
         patientRepository.deleteAll();
     }
 
-    public Patient updatePatientById(long pid, PatientPutRequest patientPutRequest)
+    public PatientResponse updatePatientById(long pid, PatientPutRequest patientPutRequest)
     {
         Patient existingPatient = patientRepository.findById(pid).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Patient not found with id : " + pid));
         existingPatient.setPatientName(patientPutRequest.getPatientName());
         existingPatient.setPatientEmail(patientPutRequest.getPatientEmail());
         existingPatient.setPatientPhoneNumber(patientPutRequest.getPatientPhoneNumber());
 
-        return patientRepository.save(existingPatient);
+        return patientResponseMapping(patientRepository.save(existingPatient));
     }
 
-    public Patient updatePatientSelectiveFields(long pid, PatientPatchRequest patientPatchRequest)
+    public PatientResponse updatePatientSelectiveFields(long pid, PatientPatchRequest patientPatchRequest)
     {
         Patient existingPatient = patientRepository.findById(pid).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Patient not found with id : " + pid));
 
@@ -84,6 +103,6 @@ public class PatientService
             existingPatient.setPatientPhoneNumber(patientPatchRequest.getPatientPhoneNumber());
         }
 
-        return patientRepository.save(existingPatient);
+        return patientResponseMapping(patientRepository.save(existingPatient));
     }
 }

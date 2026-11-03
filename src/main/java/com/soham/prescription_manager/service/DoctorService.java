@@ -3,14 +3,16 @@ package com.soham.prescription_manager.service;
 import com.soham.prescription_manager.dto.doctor.DoctorCreateRequest;
 import com.soham.prescription_manager.dto.doctor.DoctorPatchRequest;
 import com.soham.prescription_manager.dto.doctor.DoctorPutRequest;
+import com.soham.prescription_manager.dto.doctor.DoctorResponse;
 import com.soham.prescription_manager.repository.DoctorRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import com.soham.prescription_manager.model.Doctor;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+
 
 @Service
 public class DoctorService
@@ -22,30 +24,43 @@ public class DoctorService
         this.doctorRepository = doctorRepository;
     }
 
-    public List<Doctor> getAllDoctors()
+    private DoctorResponse doctorResponseMapping(Doctor doctor)
     {
-        return doctorRepository.findAll();
+        return new DoctorResponse(doctor.getDoctorId(),
+                doctor.getDoctorName(),
+                doctor.getDoctorDepartment());
     }
 
-    public Doctor getDoctorById(long did)
+    public List<DoctorResponse> getAllDoctors()
     {
-        return doctorRepository.findById(did).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Doctor not found with id : " + did));
+        List<Doctor> doctorList = doctorRepository.findAll();
+        List<DoctorResponse> doctorResponseList = new ArrayList<>();
+        for(Doctor doctor : doctorList)
+        {
+            doctorResponseList.add(doctorResponseMapping(doctor));
+        }
+
+        return doctorResponseList;
     }
 
-    public Doctor addDoctor(DoctorCreateRequest doctorCreateRequest)
+    public DoctorResponse getDoctorById(long did)
     {
-        System.out.println(doctorCreateRequest.getDoctorName());
-        System.out.println(doctorCreateRequest.getDoctorDepartment());
-        System.out.println(doctorCreateRequest.getDoctorPhoneNumber());
-        System.out.println(doctorCreateRequest.getDoctorEmail());
+        return doctorResponseMapping(
+                doctorRepository.findById(did).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Doctor not found with id : " + did))
+        );
+    }
 
+
+
+    public DoctorResponse addDoctor(DoctorCreateRequest doctorCreateRequest)
+    {
         Doctor doctor = new Doctor(
                 doctorCreateRequest.getDoctorName(),
                 doctorCreateRequest.getDoctorDepartment(),
                 doctorCreateRequest.getDoctorPhoneNumber(),
                 doctorCreateRequest.getDoctorEmail()
         );
-        return doctorRepository.save(doctor);
+        return doctorResponseMapping(doctorRepository.save(doctor));
     }
 
     public void deleteDoctorById(long did)
@@ -63,7 +78,7 @@ public class DoctorService
         doctorRepository.deleteAll();
     }
 
-    public Doctor updateDoctor(long did, DoctorPutRequest doctorPutRequest)
+    public DoctorResponse updateDoctor(long did, DoctorPutRequest doctorPutRequest)
     {
         Doctor existingDoctor = doctorRepository.findById(did).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Doctor not found by id : " + did));
 
@@ -72,10 +87,10 @@ public class DoctorService
         existingDoctor.setDoctorEmail(doctorPutRequest.getDoctorEmail());
         existingDoctor.setDoctorPhoneNumber(doctorPutRequest.getDoctorPhoneNumber());
 
-        return doctorRepository.save(existingDoctor);
+        return doctorResponseMapping(doctorRepository.save(existingDoctor));
     }
 
-    public Doctor updateDoctorById(long did, DoctorPatchRequest doctorPatchRequest)
+    public DoctorResponse updateDoctorById(long did, DoctorPatchRequest doctorPatchRequest)
     {
         Doctor existingDoctor = doctorRepository.findById(did).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Doctor not found with id : " + did));
 
@@ -99,6 +114,6 @@ public class DoctorService
             existingDoctor.setDoctorEmail(doctorPatchRequest.getDoctorEmail());
         }
 
-        return  doctorRepository.save(existingDoctor);
+        return  doctorResponseMapping(doctorRepository.save(existingDoctor));
     }
 }

@@ -3,7 +3,7 @@ package com.soham.prescription_manager.controller;
 import com.soham.prescription_manager.dto.patient.PatientCreateRequest;
 import com.soham.prescription_manager.dto.patient.PatientPatchRequest;
 import com.soham.prescription_manager.dto.patient.PatientPutRequest;
-import com.soham.prescription_manager.model.Patient;
+import com.soham.prescription_manager.dto.patient.PatientResponse;
 import com.soham.prescription_manager.service.PatientService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -23,19 +23,19 @@ public class PatientController
     }
 
     @GetMapping
-    public List<Patient> getAllPatients()
+    public List<PatientResponse> getAllPatients()
     {
         return patientService.getAllPatients();
     }
 
     @GetMapping("/{pid}")
-    public Patient getPatientById(@PathVariable long pid)
+    public PatientResponse getPatientById(@PathVariable long pid)
     {
         return patientService.getPatientById(pid);
     }
 
     @PostMapping
-    public Patient addPatient(@Valid @RequestBody PatientCreateRequest patientCreateRequest)
+    public PatientResponse addPatient(@Valid @RequestBody PatientCreateRequest patientCreateRequest)
     {
         return patientService.addPatient(patientCreateRequest);
     }
@@ -55,13 +55,13 @@ public class PatientController
     }
 
     @PutMapping("/{pid}")
-    public Patient updatePatientById(@PathVariable long pid, @Valid @RequestBody PatientPutRequest patientPutRequest)
+    public PatientResponse updatePatientById(@PathVariable long pid, @Valid @RequestBody PatientPutRequest patientPutRequest)
     {
         return patientService.updatePatientById(pid, patientPutRequest);
     }
 
     @PatchMapping("/{pid}")
-    public Patient updatePatientSelectiveField(@PathVariable long pid, @Valid @RequestBody PatientPatchRequest patientPatchRequest)
+    public PatientResponse updatePatientSelectiveField(@PathVariable long pid, @Valid @RequestBody PatientPatchRequest patientPatchRequest)
     {
         return patientService.updatePatientSelectiveFields(pid, patientPatchRequest);
     }
