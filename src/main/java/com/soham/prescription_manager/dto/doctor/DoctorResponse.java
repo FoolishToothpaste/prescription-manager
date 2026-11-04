@@ -6,7 +6,7 @@ public class DoctorResponse
     private String dname;
     private String department;
 
-    public DoctorResponse(long did, String name, String department)
+    public DoctorResponse(long did, String dname, String department)
     {
         this.did = did;
         this.dname = dname;
